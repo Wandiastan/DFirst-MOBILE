@@ -7,84 +7,28 @@ on:
     tags:
       - 'v*'
 
-permissions:
-  contents: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Setup Node.js
+      - name: Setup Node.js and Java
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: 'gradle'
-
-      - name: Install Expo CLI globally
-        run: |
-          npm install -g expo-cli
-          npm install -g eas-cli
-
-      - name: Install dependencies
+      - name: Build Android
         run: |
           npm install --legacy-peer-deps
-          cd android && chmod +x gradlew
-          ./gradlew clean
-
-      - name: Create dummy env file
-        run: |
-          echo "EXPO_PUBLIC_APP_ENV=production" > .env
-
-      - name: Setup Expo and EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          expo-version: latest
-          packager: npm
-          token: ${{ github.token }}
-
-      - name: Generate Android files
-        run: |
           npx expo prebuild --platform android --clean
-          cd android && ./gradlew bundleRelease
-
-      - name: Build Android Release
-        working-directory: android
-        run: |
+          cd android
           chmod +x gradlew
           ./gradlew assembleRelease --no-daemon
-
-      - name: Verify APK Contents
-        run: |
-          ls -la android/app/build/outputs/apk/release/
-          unzip -l android/app/build/outputs/apk/release/app-release.apk | grep -i "bots/"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: android/app/build/outputs/apk/release/app-release.apk
-          retention-days: 7
-
-      - name: Create Release
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            android/app/build/outputs/apk/release/app-release.apk
-            android/app/build/outputs/bundle/release/app-release.aab
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ github.token }} 
+          path: android/app/build/outputs/apk/release/app-release.apk 
