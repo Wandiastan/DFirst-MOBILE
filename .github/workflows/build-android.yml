@@ -19,6 +19,27 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Create google-services.json
+        run: |
+          echo '{
+            "project_info": {
+              "project_number": "000000000000",
+              "project_id": "dfirst-mobile",
+              "storage_bucket": "dfirst-mobile.appspot.com"
+            },
+            "client": [{
+              "client_info": {
+                "mobilesdk_app_id": "1:000000000000:android:0000000000000000",
+                "android_client_info": {
+                  "package_name": "com.anonymous.DFirst"
+                }
+              },
+              "api_key": [{
+                "current_key": "dummy_key"
+              }]
+            }]
+          }' > google-services.json
+
       - name: Build Android
         run: |
           npm install --legacy-peer-deps
