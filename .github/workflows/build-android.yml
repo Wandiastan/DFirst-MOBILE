@@ -32,16 +32,14 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: Setup Expo
-        uses: expo/expo-github-action@v8
-        with:
-          expo-version: latest
-          token: ${{ github.token }}
+      - name: Install Expo CLI globally
+        run: |
+          npm install -g expo-cli
+          npm install -g eas-cli
 
       - name: Install dependencies
         run: |
           npm install --legacy-peer-deps
-          npx expo install --fix
           cd android && chmod +x gradlew
           ./gradlew clean
 
@@ -49,7 +47,15 @@ jobs:
         run: |
           echo "EXPO_PUBLIC_APP_ENV=production" > .env
 
-      - name: Generate Android Bundle
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          expo-version: latest
+          packager: npm
+          token: ${{ github.token }}
+
+      - name: Generate Android files
         run: |
           npx expo prebuild --platform android --clean
           cd android && ./gradlew bundleRelease
