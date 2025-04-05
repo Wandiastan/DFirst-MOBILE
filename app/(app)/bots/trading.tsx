@@ -66,7 +66,7 @@ const bots: BotCard[] = [
     file: 'russianodds',
     color: '#FF4081',
     rating: 4.6,
-    locked: true
+    locked: false
   },
   {
     name: 'Smart Volatility Bot',
@@ -86,7 +86,7 @@ const bots: BotCard[] = [
     file: 'smarteven',
     color: '#673AB7',
     rating: 4.8,
-    locked: true
+    locked: false
   },
   {
     name: 'Alien Rise Fall Bot',
@@ -116,7 +116,7 @@ const bots: BotCard[] = [
     file: 'notouchbot',
     color: '#D4A5A5',
     rating: 4.6,
-    locked: true
+    locked: false
   },
   {
     name: 'Rise Fall Bot',
@@ -126,7 +126,7 @@ const bots: BotCard[] = [
     file: 'risefallbot',
     color: '#2A363B',
     rating: 4.9,
-    locked: true
+    locked: false
   },
   {
     name: 'High Risk Over Bot',
@@ -136,7 +136,7 @@ const bots: BotCard[] = [
     file: 'overbot',
     color: '#FFA726',
     rating: 4.4,
-    locked: true
+    locked: false
   },
   {
     name: 'High Risk Under Bot',
@@ -146,7 +146,7 @@ const bots: BotCard[] = [
     file: 'underbot',
     color: '#99B898',
     rating: 4.3,
-    locked: true
+    locked: false
   }
 ];
 
