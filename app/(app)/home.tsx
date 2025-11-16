@@ -45,7 +45,10 @@ const DEFAULT_P2P_WITHDRAW = "https://p2p.deriv.com/advertiser/426826?advert_id=
 const DEFAULT_PA_DEPOSIT = "";
 const DEFAULT_PA_WITHDRAW = "";
 const BOTS_URL = 'https://app.deriv.com/bot?t=_30qaRjl291dMjdsyM5hasGNd7ZgqdRLk';
-const OAUTH_URL = `https://oauth.deriv.com/oauth2/authorize?app_id=${APP_ID}&l=en&brand=deriv&app_markup_percentage=0&t=_30qaRjl291dMjdsyM5hasGNd7ZgqdRLk&redirect_uri=dfirsttrader://oauth2/callback`;
+// Set markup percentage to 2% to earn commissions on all trades
+// You can adjust this between 1-3% based on your preference
+const APP_MARKUP_PERCENTAGE = 2;
+const OAUTH_URL = `https://oauth.deriv.com/oauth2/authorize?app_id=${APP_ID}&l=en&brand=deriv&app_markup_percentage=${APP_MARKUP_PERCENTAGE}&t=_30qaRjl291dMjdsyM5hasGNd7ZgqdRLk&redirect_uri=dfirsttrader://oauth2/callback`;
 
 function HomeScreen() {
   const [showDisconnectModal, setShowDisconnectModal] = useState(false);
@@ -82,7 +85,8 @@ function HomeScreen() {
   const checkExistingConnections = async () => {
     try {
       const savedTokens = await AsyncStorage.getItem(getUserSpecificKey(DERIV_OAUTH_TOKENS));
-      const savedKey = await AsyncStorage.getItem(getUserSpecificKey(DERIV_API_KEY));
+      // API Key functionality disabled - OAuth only
+      // const savedKey = await AsyncStorage.getItem(getUserSpecificKey(DERIV_API_KEY));
       const firstLoginFlag = await AsyncStorage.getItem('@first_login');
       
       setIsFirstLogin(!firstLoginFlag);
@@ -94,13 +98,15 @@ function HomeScreen() {
         if (tokens.selectedAccount) {
           connectWithOAuth(tokens.selectedAccount.token);
         }
-      } else if (savedKey) {
-        setApiKey(savedKey);
-        const connected = await connectWithKey(savedKey);
-        if (!connected) {
-          setAccount(null);
-        }
       }
+      // API Key fallback disabled - OAuth only
+      // else if (savedKey) {
+      //   setApiKey(savedKey);
+      //   const connected = await connectWithKey(savedKey);
+      //   if (!connected) {
+      //     setAccount(null);
+      //   }
+      // }
     } catch (error) {
       console.error('Error checking connections:', error);
     }
@@ -285,9 +291,11 @@ function HomeScreen() {
         await AsyncStorage.removeItem(getUserSpecificKey(DERIV_OAUTH_TOKENS));
         setOauthTokens(null);
         setIsOAuthConnected(false);
-      } else {
-        await AsyncStorage.removeItem(getUserSpecificKey(DERIV_API_KEY));
       }
+      // API Key disconnect disabled - OAuth only
+      // else {
+      //   await AsyncStorage.removeItem(getUserSpecificKey(DERIV_API_KEY));
+      // }
       setAccount(null);
       setLoading(false);
       setShowDisconnectModal(false);
@@ -335,7 +343,8 @@ function HomeScreen() {
   const handleLogout = async () => {
     try {
       await logout();
-      await AsyncStorage.removeItem(getUserSpecificKey(DERIV_API_KEY));
+      // API Key removal disabled - OAuth only
+      // await AsyncStorage.removeItem(getUserSpecificKey(DERIV_API_KEY));
       await AsyncStorage.removeItem(getUserSpecificKey(DERIV_OAUTH_TOKENS));
       router.replace('/');
     } catch (error) {
@@ -642,12 +651,13 @@ function HomeScreen() {
                     <ThemedText style={styles.oauthButtonText}>Create Deriv Account</ThemedText>
                   </TouchableOpacity>
                 </View>
-                <TouchableOpacity 
+                {/* API Key link disabled - OAuth only */}
+                {/* <TouchableOpacity 
                   onPress={() => router.push('/(app)/settings')}
                   style={styles.apiKeyLink}
                 >
                   <ThemedText style={styles.apiKeyLinkText}>Use API Key Instead</ThemedText>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <View style={styles.poweredByContainer}>
                   <ThemedText style={styles.poweredByText}>Powered by</ThemedText>
                   <ThemedText style={styles.derivText}>deriv</ThemedText>

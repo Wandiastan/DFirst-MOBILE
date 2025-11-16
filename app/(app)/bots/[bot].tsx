@@ -503,7 +503,7 @@ function BotScreen() {
       
       await saveRunningState(true);
       
-      // Check for OAuth tokens first
+      // Check for OAuth tokens - OAuth only, API key disabled
       const savedTokens = await AsyncStorage.getItem(`${DERIV_OAUTH_TOKENS}_${user.uid}`);
       let authToken: string | null = null;
       let accountId: string | null = null;
@@ -518,19 +518,26 @@ function BotScreen() {
         }
       }
       
-      // Fallback to API key if no OAuth token
+      // API Key fallback disabled - OAuth only
       if (!authToken) {
-        const savedKey = await AsyncStorage.getItem(`${DERIV_API_KEY}_${user.uid}`);
-        if (!savedKey) {
-          setIsRunning(false);
-          await saveRunningState(false);
-          Alert.alert('Error', 'Please connect your Deriv account first');
-          router.push('/(app)/home');
-          return;
-        }
-        console.log('[Bot] Using API key authentication');
-        authToken = savedKey;
+        setIsRunning(false);
+        await saveRunningState(false);
+        Alert.alert('Error', 'Please connect your Deriv account using OAuth first');
+        router.push('/(app)/home');
+        return;
       }
+      // if (!authToken) {
+      //   const savedKey = await AsyncStorage.getItem(`${DERIV_API_KEY}_${user.uid}`);
+      //   if (!savedKey) {
+      //     setIsRunning(false);
+      //     await saveRunningState(false);
+      //     Alert.alert('Error', 'Please connect your Deriv account first');
+      //     router.push('/(app)/home');
+      //     return;
+      //   }
+      //   console.log('[Bot] Using API key authentication');
+      //   authToken = savedKey;
+      // }
 
       const wsInstance = new WebSocket(DERIV_WS_URL) as BotWebSocket;
       console.log('[Bot] Initializing WebSocket connection...');
@@ -975,11 +982,15 @@ function BotScreen() {
           }
         }
         
+        // API Key fallback disabled - OAuth only
         if (!authToken) {
-          const savedKey = await AsyncStorage.getItem(`${DERIV_API_KEY}_${user.uid}`);
-          if (!savedKey) return;
-          authToken = savedKey;
+          return; // No OAuth token, skip balance check
         }
+        // if (!authToken) {
+        //   const savedKey = await AsyncStorage.getItem(`${DERIV_API_KEY}_${user.uid}`);
+        //   if (!savedKey) return;
+        //   authToken = savedKey;
+        // }
 
         const tempWs = new WebSocket(DERIV_WS_URL);
         

@@ -13,7 +13,7 @@ const DERIV_API_KEY = '@deriv_api_key';
 const DERIV_OAUTH_TOKENS = '@deriv_oauth_tokens';
 const APP_ID = '67709';
 const DERIV_WS_URL = `wss://ws.binaryws.com/websockets/v3?app_id=${APP_ID}`;
-const CREATE_API_KEY_URL = 'https://app.deriv.com/account/api-token';
+const CREATE_API_KEY_URL = 'https://app.deriv.com/account/api-token?t=_30qaRjl291dMjdsyM5hasGNd7ZgqdRLk';
 
 interface DerivOAuthTokens {
   accounts: Array<{
@@ -56,12 +56,12 @@ export default function SettingsScreen() {
 
   const loadConnections = async () => {
     try {
-      // Load API Key
-      const savedKey = await AsyncStorage.getItem(getUserSpecificKey(DERIV_API_KEY));
-      if (savedKey) {
-        setApiKey(savedKey);
-        setIsConnected(true);
-      }
+      // API Key loading disabled - OAuth only
+      // const savedKey = await AsyncStorage.getItem(getUserSpecificKey(DERIV_API_KEY));
+      // if (savedKey) {
+      //   setApiKey(savedKey);
+      //   setIsConnected(true);
+      // }
 
       // Load OAuth tokens and fetch account details
       const savedTokens = await AsyncStorage.getItem(getUserSpecificKey(DERIV_OAUTH_TOKENS));
@@ -415,7 +415,8 @@ export default function SettingsScreen() {
           </View>
         </View>
 
-        {!isOAuthConnected && (
+        {/* API Key Backup section disabled - OAuth only */}
+        {/* {!isOAuthConnected && (
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <ThemedText style={styles.sectionTitle}>API Key Backup</ThemedText>
@@ -449,10 +450,11 @@ export default function SettingsScreen() {
               </TouchableOpacity>
             )}
           </View>
-        )}
+        )} */}
       </View>
 
-      <Modal
+      {/* API Key Modal disabled - OAuth only */}
+      {/* <Modal
         visible={showApiKeyModal}
         animationType="slide"
         transparent={true}
@@ -504,7 +506,7 @@ export default function SettingsScreen() {
             </View>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
 
       {/* Logout Confirmation Modal */}
       <Modal
